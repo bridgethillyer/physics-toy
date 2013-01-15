@@ -23,6 +23,8 @@
 package com.lmdig.android.tutorial.oglbox2dbasics.game;
 
 import static android.opengl.GLES10.glColor4f;
+import static android.opengl.GLES10.glEnable;
+import static android.opengl.GLES10.GL_MODULATE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +41,7 @@ import com.kristianlm.robotanks.box2dbridge.IWorld;
 import com.kristianlm.robotanks.box2dbridge.jbox2d.JBox2DWorld;
 import com.kristianlm.robotanks.box2dbridge.jnibox2d.JNIBox2DWorld;
 import com.lmdig.android.tutorial.oglbox2dbasics.MainActivity;
+import com.lmdig.android.tutorial.oglbox2dbasics.geometry.GLCircle;
 import com.lmdig.android.tutorial.oglbox2dbasics.geometry.GLRectangle;
 import com.lmdig.android.tutorial.oglbox2dbasics.geometry.GameShape;
 
@@ -77,13 +80,18 @@ public class GameImpl implements GameInterface {
 		
 		GameShape gs;
 		
-		gs = GameShape.create(new GLRectangle(2, 0.5f));
+		gs = GameShape.create(new GLRectangle(3, 0.5f));
 		IBody b1 = gs.attachToNewBody(world, null, density);
 		b1.setPosition(new Vec2(0, 2));
 		gsl.add(gs);
 		
 		gs = GameShape.create(new GLRectangle(1, 0.5f));
 		IBody b2 = gs.attachToNewBody(world, null, density);
+		b2.setPosition(new Vec2(0,-1));
+		gsl.add(gs);
+		
+		gs = GameShape.create(new GLCircle(0.5f));
+		IBody b3 = gs.attachToNewBody(world, null, density);
 		b2.setPosition(new Vec2(0,-1));
 		gsl.add(gs);
 		
@@ -132,7 +140,8 @@ public class GameImpl implements GameInterface {
 	@Override
 	public void drawFrame() {
 
-		glColor4f(1, 1, 1, 1);
+		glEnable(GL_MODULATE);
+		glColor4f(1, 0, 0, 0.5f);
 		
 		for(GameShape gs : gsl) {
 			gs.draw();

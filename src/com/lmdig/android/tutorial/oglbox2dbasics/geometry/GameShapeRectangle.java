@@ -24,46 +24,22 @@
 package com.lmdig.android.tutorial.oglbox2dbasics.geometry;
 
 import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.BodyDef;
 
-import android.util.Log;
 
 import com.kristianlm.robotanks.box2dbridge.IBody;
 import com.kristianlm.robotanks.box2dbridge.IShape;
-import com.kristianlm.robotanks.box2dbridge.IWorld;
 
 public class GameShapeRectangle extends GameShape {
 	
 	
 	GLRectangle rect;
-	IBody body;
-	IShape shape;
-	Vec2 shapePosition;
+
 	
 	
 	public GameShapeRectangle(GLRectangle r) {
 		rect = r;
 	}
 	
-	
-	/**
-	 * Attach the shape to a new body created from world
-	 */
-	@Override
-	public IBody attachToNewBody(IWorld world, Vec2 position, float density) {
-
-		BodyDef def = new BodyDef();
-		def.angularDamping = 0.5f;
-		def.linearDamping = 0.5f;
-		def.allowSleep = false;
-		body = world.createBody(def);
-		
-		attachToBody(body, position, density);
-		
-		body.refilter(0xFFFF, 0xFFFF, 0);
-
-		return body;
-	}
 	
 	/**
 	 * Attach the shape to the body
@@ -101,24 +77,10 @@ public class GameShapeRectangle extends GameShape {
 	
 	
 	@Override
-	public void detachBody(IWorld world) {
-		world.destroyBody(body);
-		body = null;
-	}
-	
-	
-	@Override
 	public void draw() {
 		Vec2 p = body.getWorldCenter().add(shapePosition);
 		
 		rect.draw(p.x, p.y, body.getAngle());
 	}
 
-
-	@Override
-	public void detachFromBody(IBody body) {
-		body.destroyShape(shape);
-		shape = null;
-		body = null;
-	}
 }

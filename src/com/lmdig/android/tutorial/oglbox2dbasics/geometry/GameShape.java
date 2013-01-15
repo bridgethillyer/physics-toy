@@ -22,6 +22,7 @@
 package com.lmdig.android.tutorial.oglbox2dbasics.geometry;
 
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.BodyDef;
 
 import com.kristianlm.robotanks.box2dbridge.IBody;
 import com.kristianlm.robotanks.box2dbridge.IShape;
@@ -29,15 +30,47 @@ import com.kristianlm.robotanks.box2dbridge.IWorld;
 
 abstract public class GameShape {
 	
+	IBody body;
+	IShape shape;
+	Vec2 shapePosition;
+	
 	public static GameShape create(GLRectangle rect) {
 		return new GameShapeRectangle(rect);
 	}
 	
+	public static GameShape create(GLCircle circle) {
+		return new GameShapeCircle(circle);
+	}
+	
 	abstract public void draw();
+	
+	
 	abstract public IShape attachToBody(IBody body, Vec2 position, float density);
-	abstract public IBody attachToNewBody(IWorld world, Vec2 position, float density);
-	abstract public void detachFromBody(IBody body);
-	abstract public void detachBody(IWorld world);
+	
+	public IBody attachToNewBody(IWorld world, Vec2 position, float density) {
+		BodyDef def = new BodyDef();
+		def.angularDamping = 0.5f;
+		def.linearDamping = 0.5f;
+		def.allowSleep = false;
+		body = world.createBody(def);
+		
+		attachToBody(body, position, density);
+		
+		body.refilter(0xFFFF, 0xFFFF, 0);
+
+		return body;
+	}
+	
+	public void detachFromBody(IBody body) {
+		body.destroyShape(shape);
+		shape = null;
+		body = null;
+	}
+	
+	public void detachBody(IWorld world) {
+		world.destroyBody(body);
+		body = null;
+	}
 	
 	
 
